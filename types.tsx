@@ -29,3 +29,11 @@ export type IconProps = {
   style?: ViewStyle;
   onPress?: () => void;
 };
+
+export interface RouteData {
+  key: string;
+  title: string;
+  type: string;
+  name: string;
+  path: any;
+}

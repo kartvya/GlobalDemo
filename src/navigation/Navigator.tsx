@@ -2,9 +2,9 @@ import {StyleSheet, Text, View} from 'react-native';
 import React from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import Userlist from '../screens/Userlist';
+import Userlist from '../screens/Tabs/Userlist';
 import {RootStackParamList} from '../../types';
-import Feed from '../screens/Feed';
+import Feed from '../screens/Tabs/Feed';
 import Home from '../screens/Home';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
