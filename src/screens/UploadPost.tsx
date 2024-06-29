@@ -11,7 +11,7 @@ import {
 import {MentionInput} from 'react-native-controlled-mentions';
 import ImagePicker, {ImageOrVideo} from 'react-native-image-crop-picker';
 import Carousel from 'react-native-reanimated-carousel';
-import {RFPercentage} from 'react-native-responsive-fontsize';
+import {RFPercentage, RFValue} from 'react-native-responsive-fontsize';
 import {RootStackParamList} from '../../types';
 import {MXicon} from '../components/Icons';
 import {NormalText, TitleText} from '../components/Text';
@@ -26,7 +26,7 @@ const UploadPost = () => {
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const dispatch = useDispatch<AppDispatch>();
-  const [value, setValue] = useState('');
+  const [value, setValue] = useState<string>('');
   const [selectedImages, setSelectedImages] = useState<ImageOrVideo[]>([]);
 
   const onPressGallery = () => {
@@ -206,9 +206,10 @@ const styles = StyleSheet.create({
   commentInput: {
     backgroundColor: colors.white,
     color: colors.black,
-    fontSize: 16,
+    fontSize: RFValue(12),
     height: RFPercentage(8),
     textAlignVertical: 'top',
+    fontFamily: 'ComicNeue-Regular',
   },
   noPhotoContainer: {
     flex: 1,
