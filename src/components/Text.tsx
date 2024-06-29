@@ -35,11 +35,11 @@ const styles = StyleSheet.create({
   titleText: {
     fontSize: RFValue(16),
     color: 'black',
-    fontFamily: 'Nunito-Bold',
+    fontFamily: 'ComicNeue-Bold',
   },
   normalText: {
     fontSize: RFValue(12),
     color: 'black',
-    fontFamily: 'Nunito-Medium',
+    fontFamily: 'ComicNeue-Regular',
   },
 });

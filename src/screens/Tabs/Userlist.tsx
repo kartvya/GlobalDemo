@@ -27,9 +27,9 @@ const MemoizedRenderItem = React.memo(
       <Pressable
         style={styles.followBtnContainer}
         onPress={() => handleToggleFollow(item.id)}>
-        <NormalText style={{fontWeight: 'bold', color: colors.white}}>
+        <TitleText style={{color: colors.white}}>
           {!item.followed ? 'Follow' : 'Unfollow'}
-        </NormalText>
+        </TitleText>
       </Pressable>
     </View>
   ),
@@ -77,13 +77,15 @@ const Userlist = () => {
           data={filteredUsers}
           renderItem={renderItem}
           showsVerticalScrollIndicator={false}
-          ItemSeparatorComponent={() => <View style={{marginVertical: 5}} />}
+          ItemSeparatorComponent={() => (
+            <View style={{marginVertical: RFPercentage(1)}} />
+          )}
           contentContainerStyle={{paddingBottom: RFPercentage(2)}}
           keyExtractor={(item: Person) => item.id.toString()}
         />
       ) : (
         <View style={styles.noUsersContainer}>
-          <Text style={styles.noUsersText}>No users found</Text>
+          <TitleText style={styles.noUsersText}>No users found</TitleText>
         </View>
       )}
     </View>
@@ -126,7 +128,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   noUsersText: {
-    fontSize: RFPercentage(3),
-    color: 'gray',
+    color: colors.textGray,
   },
 });

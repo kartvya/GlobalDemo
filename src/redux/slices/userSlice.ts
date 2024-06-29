@@ -15,7 +15,8 @@ export interface Post {
   commentCount: number;
   username: string;
   userProfileImage: string;
-  isLiked:boolean
+  isLiked:boolean;
+  description:string;
 }
 
 interface UserState {
@@ -52,7 +53,8 @@ const initialState: UserState = {
       commentCount: 45,
       username: 'Emma Watson',
       userProfileImage: 'https://picsum.photos/id/1005/100',
-      isLiked: false
+      isLiked: false,
+      description: "Beautiful sunset view from the hilltop. Nature at its best!",
     },
     {
       id: 2,
@@ -64,7 +66,8 @@ const initialState: UserState = {
       commentCount: 32,
       username: 'Liam Johnson',
       userProfileImage: 'https://picsum.photos/id/1006/100',
-      isLiked: false
+      isLiked: false,
+      description: "",
     },
     {
       id: 3,
@@ -76,7 +79,8 @@ const initialState: UserState = {
       commentCount: 67,
       username: 'Olivia Brown',
       userProfileImage: 'https://picsum.photos/id/1008/100',
-      isLiked: false
+      isLiked: false,
+      description: "Beautiful sunset view from the hilltop. Nature at its best!",
     },
     {
       id: 4,
@@ -88,7 +92,8 @@ const initialState: UserState = {
       commentCount: 40,
       username: 'Noah Smith',
       userProfileImage: 'https://picsum.photos/id/1011/100',
-      isLiked: false
+      isLiked: false,
+      description: "",
     },
     {
       id: 5,
@@ -100,7 +105,8 @@ const initialState: UserState = {
       commentCount: 75,
       username: 'Ava Davis',
       userProfileImage: 'https://picsum.photos/id/1012/100',
-      isLiked: false
+      isLiked: false,
+      description: "Beautiful sunset view from the hilltop. Nature at its best!",
     },
     {
       id: 6,
@@ -112,7 +118,8 @@ const initialState: UserState = {
       commentCount: 85,
       username: 'Elijah Wilson',
       userProfileImage: 'https://picsum.photos/id/1015/100',
-      isLiked: false
+      isLiked: false,
+      description: "",
     },
     {
       id: 7,
@@ -124,7 +131,8 @@ const initialState: UserState = {
       commentCount: 50,
       username: 'Sophia Martinez',
       userProfileImage: 'https://picsum.photos/id/1016/100',
-      isLiked: false
+      isLiked: false,
+      description: "",
     },
     {
       id: 8,
@@ -136,7 +144,8 @@ const initialState: UserState = {
       commentCount: 60,
       username: 'James Anderson',
       userProfileImage: 'https://picsum.photos/id/1018/100',
-      isLiked: false
+      isLiked: false,
+      description: "Beautiful sunset view from the hilltop. Nature at its best!",
     },
     {
       id: 9,
@@ -148,7 +157,8 @@ const initialState: UserState = {
       commentCount: 43,
       username: 'Isabella Garcia',
       userProfileImage: 'https://picsum.photos/id/1020/100',
-      isLiked: false
+      isLiked: false,
+      description: "",
     },
     {
       id: 10,
@@ -160,7 +170,8 @@ const initialState: UserState = {
       commentCount: 52,
       username: 'William Taylor',
       userProfileImage: 'https://picsum.photos/id/1021/100',
-      isLiked: false
+      isLiked: false,
+      description: "Beautiful sunset view from the hilltop. Nature at its best!",
     },
   ],
 };
@@ -176,7 +187,7 @@ const userSlice = createSlice({
       if (person) person.followed = !person.followed;
     },
     addPost(state, action: PayloadAction<Post>) {
-      state.posts.push(action.payload);
+      state.posts.unshift(action.payload);
     },
     toggleLike(state, action: PayloadAction<number>) {
       const post = state.posts.find(p => p.id === action.payload);

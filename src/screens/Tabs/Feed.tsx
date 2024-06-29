@@ -1,3 +1,4 @@
+import React, {useCallback, useRef, useState} from 'react';
 import {
   Dimensions,
   FlatList,
@@ -5,31 +6,26 @@ import {
   ListRenderItemInfo,
   Pressable,
   StyleSheet,
-  Text,
   View,
 } from 'react-native';
-import React, {useCallback, useRef, useState} from 'react';
-import {useDispatch} from 'react-redux';
-import {AppDispatch, RootState, useAppSelector} from '../../redux/appStore';
-import {RFPercentage} from 'react-native-responsive-fontsize';
-import Wrapper from '../../components/Wrapper';
-import {NormalText, TitleText} from '../../components/Text';
-import Carousel from 'react-native-reanimated-carousel';
-import {MXicon} from '../../components/Icons';
-import {colors} from '../../utility';
-import {Post, toggleLike} from '../../redux/slices/userSlice';
-import DoubleTouchableOpacity from '../../components/DoubleTouchableOpacity';
-import Pagination from '../../components/pagination/Pagination';
 import Animated, {
-  Extrapolate,
-  interpolate,
   runOnJS,
   useAnimatedStyle,
   useSharedValue,
   withDelay,
   withSpring,
-  withTiming,
 } from 'react-native-reanimated';
+import Carousel from 'react-native-reanimated-carousel';
+import {RFPercentage} from 'react-native-responsive-fontsize';
+import {useDispatch} from 'react-redux';
+import DoubleTouchableOpacity from '../../components/DoubleTouchableOpacity';
+import {MXicon} from '../../components/Icons';
+import {NormalText, TitleText} from '../../components/Text';
+import Wrapper from '../../components/Wrapper';
+import Pagination from '../../components/pagination/Pagination';
+import {AppDispatch, useAppSelector} from '../../redux/appStore';
+import {Post, toggleLike} from '../../redux/slices/userSlice';
+import {colors} from '../../utility';
 
 const width = Dimensions.get('window').width;
 
@@ -40,24 +36,24 @@ interface RenderItemProps {
 const MemoizedRenderItem: React.FC<RenderItemProps> = React.memo(({item}) => {
   const dispatch = useDispatch<AppDispatch>();
   const [activeIndex, setActiveIndex] = useState(0);
-  // const AnimatedImage = Animated.createAnimatedComponent(Image);
-  // const scale = useSharedValue(0);
-  // const rStyle = useAnimatedStyle(() => ({
-  //   transform: [{scale: Math.max(scale.value, 0)}],
-  // }));
+  const AnimatedImage = Animated.createAnimatedComponent(Image);
+  const scale = useSharedValue(0);
+  const rStyle = useAnimatedStyle(() => ({
+    transform: [{scale: Math.max(scale.value, 0)}],
+  }));
 
-  // const onDoubleTap = useCallback(() => {
-  //   scale.value = withSpring(1, undefined, isFinished => {
-  //     if (isFinished) {
-  //       scale.value = withDelay(500, withSpring(0));
-  //       runOnJS(handleLikeToggle)(item.id);
-  //     }
-  //   });
-  // }, []);
+  const onDoubleTap = useCallback(() => {
+    scale.value = withSpring(1, undefined, isFinished => {
+      if (isFinished) {
+        scale.value = withDelay(500, withSpring(0));
+        runOnJS(handleLikeToggle)(item.id);
+      }
+    });
+  }, []);
 
-  // const handleLikeToggle = (itemId: number) => {
-  //   dispatch(toggleLike(itemId));
-  // };
+  const handleLikeToggle = (itemId: number) => {
+    dispatch(toggleLike(itemId));
+  };
   return (
     <View style={styles.userContainer}>
       <View style={{flexDirection: 'row', alignItems: 'center'}}>
@@ -71,41 +67,47 @@ const MemoizedRenderItem: React.FC<RenderItemProps> = React.memo(({item}) => {
           <TitleText>{item.username}</TitleText>
         </View>
       </View>
-      {/* <DoubleTouchableOpacity
+      {item.description && (
+        <NormalText style={styles.descriptionText}>
+          {item.description}
+        </NormalText>
+      )}
+      <DoubleTouchableOpacity
         onPress={() => {}}
         onDoublePress={() => onDoubleTap()}
-        doublePressDelay={250}> */}
-      <View style={{flex: 1, alignSelf: 'center'}}>
-        <Carousel
-          width={width}
-          height={RFPercentage(30)}
-          autoPlay={false}
-          data={item.uploadedImages}
-          scrollAnimationDuration={1000}
-          style={{
-            marginTop: RFPercentage(1.5),
-          }}
-          panGestureHandlerProps={{
-            activeOffsetX: [-10, 0],
-          }}
-          onSnapToItem={carouselIndex => setActiveIndex(carouselIndex)}
-          renderItem={({index, item: imageUrl}) => (
-            <View
-              style={{
-                flex: 1,
-                justifyContent: 'center',
-              }}>
-              <Image
-                source={{uri: imageUrl}}
-                style={{width: '100%', height: '100%'}}
-                resizeMode="cover"
-              />
-            </View>
-          )}
-        />
-      </View>
-      {/* </DoubleTouchableOpacity> */}
-      {item.uploadedImages.length > 1 && (
+        doublePressDelay={250}>
+        <View style={{flex: 1, alignSelf: 'center'}}>
+          <Carousel
+            width={width}
+            height={RFPercentage(40)}
+            autoPlay={false}
+            data={item.uploadedImages}
+            scrollAnimationDuration={1000}
+            style={{
+              marginTop: RFPercentage(1.5),
+            }}
+            loop={false}
+            panGestureHandlerProps={{
+              activeOffsetX: [-10, 0],
+            }}
+            onSnapToItem={carouselIndex => setActiveIndex(carouselIndex)}
+            renderItem={({index, item: imageUrl}) => (
+              <View
+                style={{
+                  flex: 1,
+                  justifyContent: 'center',
+                }}>
+                <Image
+                  source={{uri: imageUrl}}
+                  style={{width: '100%', height: '100%'}}
+                  resizeMode="cover"
+                />
+              </View>
+            )}
+          />
+        </View>
+      </DoubleTouchableOpacity>
+      {item.uploadedImages.length > 1 ? (
         <View style={{marginVertical: RFPercentage(2)}}>
           <Pagination
             dotsLength={item.uploadedImages.length}
@@ -118,8 +120,10 @@ const MemoizedRenderItem: React.FC<RenderItemProps> = React.memo(({item}) => {
             color={colors.white}
           />
         </View>
+      ) : (
+        <View style={{marginVertical: RFPercentage(1)}} />
       )}
-      {/* <View
+      <View
         style={[
           StyleSheet.absoluteFillObject,
           {alignItems: 'center', justifyContent: 'center'},
@@ -137,37 +141,20 @@ const MemoizedRenderItem: React.FC<RenderItemProps> = React.memo(({item}) => {
             rStyle,
           ]}
         />
-      </View> */}
-      <View style={styles.likeConatiner}>
-        <Pressable
-          style={styles.pressebleIconConatiner}
-          onPress={() => dispatch(toggleLike(item.id))}>
-          <MXicon
-            type="FontAwesome"
-            name={item.isLiked ? 'heart' : 'heart-o'}
-            size={RFPercentage(2.5)}
-            color={item.isLiked ? colors.pink : colors.black}
-          />
-          <NormalText style={{marginHorizontal: RFPercentage(0.8)}}>
-            {item.likeCount}
-          </NormalText>
-        </Pressable>
-        <View
-          style={{
-            height: RFPercentage(3),
-            width: 1,
-            backgroundColor: colors.black,
-          }}
-        />
-        <Pressable style={styles.pressebleIconConatiner}>
-          <MXicon
-            type="FontAwesome"
-            name="comment-o"
-            size={RFPercentage(2.5)}
-            color={colors.black}
-          />
-        </Pressable>
       </View>
+      <Pressable
+        style={styles.pressebleIconConatiner}
+        onPress={() => dispatch(toggleLike(item.id))}>
+        <MXicon
+          type="FontAwesome"
+          name={item.isLiked ? 'heart' : 'heart-o'}
+          size={RFPercentage(2.5)}
+          color={item.isLiked ? colors.pink : colors.black}
+        />
+        <NormalText style={{marginHorizontal: RFPercentage(0.8)}}>
+          {item.likeCount} Likes
+        </NormalText>
+      </Pressable>
     </View>
   );
 });
@@ -239,20 +226,21 @@ const styles = StyleSheet.create({
   userNameContainer: {
     marginHorizontal: RFPercentage(1),
   },
-  likeConatiner: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    flex: 1,
-  },
   pressebleIconConatiner: {
     flex: 1,
-    alignItems: 'center',
     flexDirection: 'row',
-    justifyContent: 'center',
+    alignItems: 'center',
+    marginHorizontal: RFPercentage(1),
+    marginBottom: RFPercentage(1),
   },
   paginationDotStyle: {
     width: 9,
     height: 9,
     borderRadius: 30,
+  },
+  descriptionText: {
+    color: colors.black,
+    marginVertical: RFPercentage(0.5),
+    marginTop: RFPercentage(1),
   },
 });

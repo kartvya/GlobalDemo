@@ -2,7 +2,7 @@ import React from 'react';
 import {StyleSheet, View, TextInput, TextInputProps} from 'react-native';
 import {MXicon} from './Icons';
 import {colors} from '../utility';
-import {RFPercentage} from 'react-native-responsive-fontsize';
+import {RFPercentage, RFValue} from 'react-native-responsive-fontsize';
 
 interface CommonSearchbarProps {
   searchText: string;
@@ -19,14 +19,15 @@ const CommonSearchbar: React.FC<CommonSearchbarProps> = props => {
     <View style={styles.container}>
       <View style={{flex: 1, justifyContent: 'center'}}>
         <MXicon
-          type={'EvilIcons'}
-          name="search"
-          size={27}
-          color={colors.black}
+          type={'AntDesign'}
+          name="search1"
+          size={20}
+          color={colors.textGray}
           style={{
             position: 'absolute',
             zIndex: 999,
-            paddingLeft: RFPercentage(1),
+            paddingLeft: RFPercentage(2),
+            top: RFPercentage(1.8),
           }}
         />
         <TextInput
@@ -48,11 +49,12 @@ const styles = StyleSheet.create({
     color: colors.black,
     borderRadius: 8,
     borderColor: colors.borderGray,
-    fontSize: 16,
+    fontSize: RFValue(12),
     borderWidth: 1,
     padding: 7,
     marginTop: 5,
-    paddingLeft: RFPercentage(4.5),
+    paddingLeft: RFPercentage(5.5),
+    fontFamily: 'ComicNeue-Regular',
   },
   container: {
     flexDirection: 'row',
