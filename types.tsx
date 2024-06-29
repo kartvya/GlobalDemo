@@ -1,9 +1,8 @@
 import type {ViewStyle} from 'react-native';
 
 export type RootStackParamList = {
-  userlist: undefined;
-  feed: undefined;
   home: undefined;
+  uploadPost: undefined;
 };
 export type IconType =
   | 'Fontisto'

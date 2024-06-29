@@ -7,6 +7,7 @@ import {createFilter} from 'react-native-search-filter';
 import {AppDispatch, useAppSelector} from '../../redux/appStore';
 import {Person, toggleFollow} from '../../redux/slices/userSlice';
 import {useDispatch} from 'react-redux';
+import {colors} from '../../utility';
 
 interface RenderItemProps {
   item: Person;
@@ -26,7 +27,7 @@ const MemoizedRenderItem = React.memo(
       <Pressable
         style={styles.followBtnContainer}
         onPress={() => handleToggleFollow(item.id)}>
-        <NormalText style={{fontWeight: 'bold', color: '#fff'}}>
+        <NormalText style={{fontWeight: 'bold', color: colors.white}}>
           {!item.followed ? 'Follow' : 'Unfollow'}
         </NormalText>
       </Pressable>
@@ -112,7 +113,7 @@ const styles = StyleSheet.create({
     marginHorizontal: RFPercentage(1),
   },
   followBtnContainer: {
-    backgroundColor: 'gray',
+    backgroundColor: colors.primeColor,
     borderRadius: 6,
     height: RFPercentage(4),
     width: RFPercentage(12),

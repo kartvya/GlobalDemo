@@ -6,6 +6,7 @@ import Feed from './Tabs/Feed';
 import {NormalText} from '../components/Text';
 import {RFPercentage, RFValue} from 'react-native-responsive-fontsize';
 import {RouteData} from '../../types';
+import {colors} from '../utility';
 
 const renderScene = SceneMap({
   first: Feed,
@@ -19,7 +20,6 @@ const renderTabBar = (props: any) => (
     renderIcon={({route}: {route: RouteData}) => (
       <View
         style={{
-          paddingHorizontal: 50,
           borderRadius: 20,
         }}>
         <NormalText
@@ -37,7 +37,7 @@ const renderTabBar = (props: any) => (
     labelStyle={{fontSize: 12}}
     inactiveColor="gray"
     indicatorStyle={{
-      backgroundColor: 'white',
+      backgroundColor: colors.primeColor,
     }}
   />
 );
