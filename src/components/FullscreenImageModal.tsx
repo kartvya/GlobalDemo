@@ -34,6 +34,7 @@ const FullscreenImageModal: React.FC<FullscreenImageModalProps> = props => {
       isVisible={userPost.showImageModal}
       style={{margin: 0}}
       testID={'modal'}
+      animationIn={'fadeIn'}
       onSwipeComplete={() => {}}>
       <View style={styles.centeredView}>
         <Carousel
@@ -117,6 +118,7 @@ const FullscreenImageModal: React.FC<FullscreenImageModalProps> = props => {
             type="AntDesign"
             name={'closecircle'}
             size={RFPercentage(7)}
+            color={colors.white}
           />
         </Pressable>
       </View>

@@ -37,10 +37,6 @@ interface ImageData {
   width: number;
 }
 
-interface ImageProps {
-  assets: ImageData[];
-}
-
 const UploadPost = () => {
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
@@ -53,6 +49,7 @@ const UploadPost = () => {
   const [selectedImages, setSelectedImages] = useState<ImageData[]>([]);
   const [isKeyboardVisible, setKeyboardVisible] = useState<boolean>(false);
   const [activeIndex, setActiveIndex] = useState<number>();
+  const [usedTags, setUsedTags] = useState<Person[]>([]);
 
   useEffect(() => {
     const keyboardDidShowListener = Keyboard.addListener(
@@ -133,31 +130,61 @@ const UploadPost = () => {
       return null;
     }
 
+    const filteredUsers = followedUser.filter(
+      one =>
+        one.name.toLowerCase().includes(keyword.toLowerCase()) &&
+        !usedTags.some(tag => tag.id === one.id),
+    );
+
+    if (filteredUsers.length === 0) {
+      return (
+        <View style={styles.suggestionsContainer}>
+          <NormalText style={{margin: RFPercentage(1)}}>
+            No followers.
+          </NormalText>
+        </View>
+      );
+    }
+
     return (
       <ScrollView
         keyboardShouldPersistTaps="always"
-        style={{
-          width: '100%',
-          maxHeight: RFPercentage(15),
-          top: -23,
-          elevation: 3,
-          backgroundColor: colors.white,
-        }}>
-        {followedUser
-          .filter(one => one.name.toLowerCase().includes(keyword.toLowerCase()))
-          .map(one => {
-            const firstName = one.name.split(' ')[0];
-            return (
-              <Pressable
-                key={one.id}
-                onPress={() => onSuggestionPress({id: one.id, name: firstName})}
-                style={{padding: 12}}>
-                <NormalText>{firstName}</NormalText>
-              </Pressable>
-            );
-          })}
+        style={styles.suggestionsContainer}>
+        {filteredUsers.map(one => {
+          const firstName = one.name.split(' ')[0];
+          return (
+            <Pressable
+              key={one.id}
+              onPress={() => {
+                onSuggestionPress({id: one.id, name: firstName});
+                setUsedTags(prevTags => [...prevTags, one]);
+              }}
+              style={styles.suggestionItem}>
+              <NormalText>{firstName}</NormalText>
+            </Pressable>
+          );
+        })}
       </ScrollView>
     );
+  };
+
+  const handleTagRemoval = (text: string) => {
+    const mentionRegex = /@(\w+)/g;
+    const mentionMatches = [...text.matchAll(mentionRegex)].map(
+      match => match[1],
+    );
+    const removedTags = usedTags.filter(
+      tag => !mentionMatches.includes(tag.name),
+    );
+    if (removedTags.length > 0) {
+      setUsedTags(prevTags =>
+        prevTags.filter(
+          tag => !removedTags.some(removed => removed.id === tag.id),
+        ),
+      );
+    }
+
+    setValue(text);
   };
 
   return (
@@ -194,7 +221,7 @@ const UploadPost = () => {
           maxLength={300}
           style={styles.commentInput}
           value={value}
-          onChange={setValue}
+          onChange={handleTagRemoval}
           partTypes={[
             {
               trigger: '@',
@@ -426,5 +453,15 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     flexDirection: 'row',
     justifyContent: 'center',
+  },
+  suggestionsContainer: {
+    width: '100%',
+    maxHeight: RFPercentage(15),
+    top: -23,
+    elevation: 3,
+    backgroundColor: colors.white,
+  },
+  suggestionItem: {
+    padding: 12,
   },
 });

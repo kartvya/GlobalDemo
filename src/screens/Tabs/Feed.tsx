@@ -46,6 +46,7 @@ const MemoizedRenderItem: React.FC<RenderItemProps> = React.memo(
     const [isSoundOn, setIsSoundOn] = useState<boolean>(false);
     const videoRef = useRef(null);
     const AnimatedImage = Animated.createAnimatedComponent(Image);
+    const userPost = useAppSelector(state => state.home);
     const scrollX = useSharedValue(0);
     const scale = useSharedValue(0);
     const rStyle = useAnimatedStyle(() => ({
@@ -170,7 +171,8 @@ const MemoizedRenderItem: React.FC<RenderItemProps> = React.memo(
                           ignoreSilentSwitch="ignore"
                           paused={
                             !isVisible ||
-                            !(activeIndex == 0 || activeIndex == index)
+                            !(activeIndex === 0 || activeIndex === index) ||
+                            userPost.showImageModal
                           }
                           muted={isSoundOn}
                           automaticallyWaitsToMinimizeStalling={false}
@@ -341,6 +343,7 @@ const styles = StyleSheet.create({
     color: colors.black,
     marginVertical: RFPercentage(0.5),
     marginTop: RFPercentage(1),
+    fontFamily: 'ComicNeue-Regular',
   },
   username: {
     color: '#E90019',
