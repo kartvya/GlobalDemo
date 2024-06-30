@@ -19,9 +19,14 @@ export interface Post {
   description:string;
 }
 
+export interface FollowedUser {
+
+}
+
 interface UserState {
   people: Person[];
   posts: Post[];
+  followedUser: Person[]
 }
 
 const initialState: UserState = {
@@ -174,9 +179,8 @@ const initialState: UserState = {
       description: "Beautiful sunset view from the hilltop. Nature at its best!",
     },
   ],
+  followedUser:[]
 };
-
-
 
 const userSlice = createSlice({
   name: 'user',
@@ -184,7 +188,14 @@ const userSlice = createSlice({
   reducers: {
     toggleFollow(state, action: PayloadAction<number>) {
       const person = state.people.find(p => p.id === action.payload);
-      if (person) person.followed = !person.followed;
+      if (person) {
+        person.followed = !person.followed;
+        if (person.followed) {
+          state.followedUser.push(person);
+        } else {
+          state.followedUser = state.followedUser.filter((item:Person)=> item.id !== person.id);
+        }
+      }
     },
     addPost(state, action: PayloadAction<Post>) {
       state.posts.unshift(action.payload);

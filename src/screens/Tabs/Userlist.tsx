@@ -25,7 +25,10 @@ const MemoizedRenderItem = React.memo(
         </View>
       </View>
       <Pressable
-        style={styles.followBtnContainer}
+        style={[
+          styles.followBtnContainer,
+          {backgroundColor: !item.followed ? colors.primeColor : colors.black},
+        ]}
         onPress={() => handleToggleFollow(item.id)}>
         <TitleText style={{color: colors.white}}>
           {!item.followed ? 'Follow' : 'Unfollow'}
@@ -115,7 +118,6 @@ const styles = StyleSheet.create({
     marginHorizontal: RFPercentage(1),
   },
   followBtnContainer: {
-    backgroundColor: colors.primeColor,
     borderRadius: 6,
     height: RFPercentage(4),
     width: RFPercentage(12),
