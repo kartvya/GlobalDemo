@@ -7,6 +7,7 @@ import {NormalText, TitleText} from '../components/Text';
 import {RFPercentage, RFValue} from 'react-native-responsive-fontsize';
 import {RouteData} from '../../types';
 import {colors} from '../utility';
+import FullscreenImageModal from '../components/FullscreenImageModal';
 
 const renderScene = SceneMap({
   first: Feed,
@@ -62,6 +63,7 @@ const Home = () => {
         initialLayout={{width: layout.width}}
         renderTabBar={renderTabBar}
       />
+      <FullscreenImageModal />
     </View>
   );
 };

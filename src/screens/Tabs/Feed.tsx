@@ -25,7 +25,7 @@ import {MXicon} from '../../components/Icons';
 import {NormalText, TitleText} from '../../components/Text';
 import Wrapper from '../../components/Wrapper';
 import {AppDispatch, useAppSelector} from '../../redux/appStore';
-import {Post, toggleLike} from '../../redux/slices/userSlice';
+import {Post, toggleImageModal, toggleLike} from '../../redux/slices/userSlice';
 import {colors} from '../../utility';
 import ParsedText from 'react-native-parsed-text';
 import {replaceMentionValues} from 'react-native-controlled-mentions';
@@ -72,6 +72,10 @@ const MemoizedRenderItem: React.FC<RenderItemProps> = React.memo(
       return replaceMentionValues(matchingString, ({name}) => `${name}`);
     };
 
+    const onSingleTap = () => {
+      dispatch(toggleImageModal({images: item.uploadedImages, open: true}));
+    };
+
     const handleNamePress = (name: string, matchIndex: number) => {
       ToastAndroid.show(
         `${name} has been tagged to this post!`,
@@ -111,7 +115,7 @@ const MemoizedRenderItem: React.FC<RenderItemProps> = React.memo(
         )}
         {item.uploadedImages.length > 0 && (
           <DoubleTouchableOpacity
-            onPress={() => {}}
+            onPress={() => onSingleTap()}
             onDoublePress={() => onDoubleTap()}
             doublePressDelay={250}>
             <View style={{flex: 1, alignSelf: 'center'}}>

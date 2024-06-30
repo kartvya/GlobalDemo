@@ -19,14 +19,14 @@ export interface Post {
   description:string;
 }
 
-export interface FollowedUser {
 
-}
 
 interface UserState {
   people: Person[];
   posts: Post[];
-  followedUser: Person[]
+  followedUser: Person[],
+  showImageModal:boolean,
+  selectedImages:string[]
 }
 
 const initialState: UserState = {
@@ -179,7 +179,9 @@ const initialState: UserState = {
       description: "Beautiful sunset view from the hilltop. Nature at its best!",
     },
   ],
-  followedUser:[]
+  followedUser:[],
+  showImageModal:false,
+  selectedImages:[]
 };
 
 const userSlice = createSlice({
@@ -207,9 +209,13 @@ const userSlice = createSlice({
         post.likeCount += post.isLiked ? 1 : -1;
       }
     },
+    toggleImageModal(state, action: PayloadAction<{ images: string[]; open: boolean }>) {
+      state.selectedImages = action.payload.open ? action.payload.images : [];
+      state.showImageModal = action.payload.open;
+    },
   },
 });
 
 
-export const { toggleFollow, addPost, toggleLike } = userSlice.actions;
+export const { toggleFollow, addPost, toggleLike,toggleImageModal } = userSlice.actions;
 export default userSlice;
