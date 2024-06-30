@@ -253,7 +253,7 @@ const MemoizedRenderItem: React.FC<RenderItemProps> = React.memo(
   },
 );
 
-const Feed: React.FC = () => {
+const Feed = () => {
   const userPost = useAppSelector(state => state.home.posts) as Post[];
   const dispatch = useDispatch<AppDispatch>();
   const flatlistRef = useRef<FlatList<Post>>(null);

@@ -1,14 +1,13 @@
 import React from 'react';
 import {StyleSheet, View, useWindowDimensions} from 'react-native';
-import {SceneMap, TabBar, TabView} from 'react-native-tab-view';
-import Userlist from './Tabs/Userlist';
-import Feed from './Tabs/Feed';
-import {NormalText, TitleText} from '../components/Text';
 import {RFPercentage, RFValue} from 'react-native-responsive-fontsize';
+import {SceneMap, TabBar, TabView} from 'react-native-tab-view';
 import {RouteData} from '../../types';
-import {colors} from '../utility';
 import FullscreenImageModal from '../components/FullscreenImageModal';
-import MyStatusBar from '../components/CustomeStatusBar';
+import {NormalText, TitleText} from '../components/Text';
+import {colors} from '../utility';
+import Feed from './Tabs/Feed';
+import Userlist from './Tabs/Userlist';
 
 const renderScene = SceneMap({
   first: Feed,
@@ -26,7 +25,7 @@ const renderTabBar = (props: any) => (
         }}>
         <NormalText
           style={{
-            color: colors.white,
+            color: colors.black,
             marginVertical: RFPercentage(1),
             fontSize: RFValue(10),
           }}
@@ -35,11 +34,11 @@ const renderTabBar = (props: any) => (
         </NormalText>
       </View>
     )}
-    style={{backgroundColor: colors.primeColor}}
+    style={{backgroundColor: colors.white}}
     labelStyle={{fontSize: 12}}
     inactiveColor="gray"
     indicatorStyle={{
-      backgroundColor: colors.white,
+      backgroundColor: colors.primeColor,
     }}
   />
 );
@@ -53,31 +52,24 @@ const Home = () => {
   ]);
 
   return (
-    <>
-      <MyStatusBar
-        backgroundColor={colors.primeColor}
-        barStyle="light-content"
-        translucent={false}
+    <View style={{flex: 1, backgroundColor: colors.white}}>
+      <TitleText
+        style={{
+          textAlign: 'center',
+          marginVertical: RFPercentage(1),
+          color: colors.black,
+        }}>
+        Demo Project
+      </TitleText>
+      <TabView
+        navigationState={{index, routes}}
+        renderScene={renderScene}
+        onIndexChange={setIndex}
+        initialLayout={{width: layout.width}}
+        renderTabBar={renderTabBar}
       />
-      <View style={{flex: 1, backgroundColor: colors.primeColor}}>
-        <TitleText
-          style={{
-            textAlign: 'center',
-            marginVertical: RFPercentage(1),
-            color: colors.white,
-          }}>
-          Demo Project
-        </TitleText>
-        <TabView
-          navigationState={{index, routes}}
-          renderScene={renderScene}
-          onIndexChange={setIndex}
-          initialLayout={{width: layout.width}}
-          renderTabBar={renderTabBar}
-        />
-        <FullscreenImageModal />
-      </View>
-    </>
+      <FullscreenImageModal />
+    </View>
   );
 };
 

@@ -168,12 +168,12 @@ const UploadPost = () => {
             <MXicon
               type="AntDesign"
               name="close"
-              color={colors.white}
+              color={colors.black}
               size={RFPercentage(3)}
             />
           </Pressable>
           <TitleText
-            style={{marginHorizontal: RFPercentage(1), color: colors.white}}>
+            style={{marginHorizontal: RFPercentage(2), color: colors.black}}>
             New post
           </TitleText>
         </View>
@@ -181,7 +181,7 @@ const UploadPost = () => {
           <MXicon
             type="AntDesign"
             name={'check'}
-            color={colors.white}
+            color={colors.black}
             size={RFPercentage(3)}
           />
         </Pressable>
@@ -368,10 +368,11 @@ const styles = StyleSheet.create({
   headerContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingHorizontal: RFPercentage(1),
+    paddingHorizontal: RFPercentage(2),
     paddingVertical: RFPercentage(2),
     justifyContent: 'space-between',
-    backgroundColor: colors.primeColor,
+    backgroundColor: colors.white,
+    borderBottomWidth: StyleSheet.hairlineWidth,
   },
   textInputContainer: {
     padding: RFPercentage(1.5),
