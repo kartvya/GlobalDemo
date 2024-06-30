@@ -11,7 +11,8 @@ const Stack = createNativeStackNavigator<RootStackParamList>();
 const Navigator = () => {
   return (
     <NavigationContainer>
-      <Stack.Navigator screenOptions={{headerShown: false}}>
+      <Stack.Navigator
+        screenOptions={{headerShown: false, orientation: 'portrait'}}>
         <Stack.Screen name="home" component={Home} />
         <Stack.Screen name="uploadPost" component={UploadPost} />
       </Stack.Navigator>

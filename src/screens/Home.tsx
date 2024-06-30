@@ -8,6 +8,7 @@ import {RFPercentage, RFValue} from 'react-native-responsive-fontsize';
 import {RouteData} from '../../types';
 import {colors} from '../utility';
 import FullscreenImageModal from '../components/FullscreenImageModal';
+import MyStatusBar from '../components/CustomeStatusBar';
 
 const renderScene = SceneMap({
   first: Feed,
@@ -25,7 +26,7 @@ const renderTabBar = (props: any) => (
         }}>
         <NormalText
           style={{
-            color: 'black',
+            color: colors.white,
             marginVertical: RFPercentage(1),
             fontSize: RFValue(10),
           }}
@@ -34,11 +35,11 @@ const renderTabBar = (props: any) => (
         </NormalText>
       </View>
     )}
-    style={{backgroundColor: 'white'}}
+    style={{backgroundColor: colors.primeColor}}
     labelStyle={{fontSize: 12}}
     inactiveColor="gray"
     indicatorStyle={{
-      backgroundColor: colors.primeColor,
+      backgroundColor: colors.white,
     }}
   />
 );
@@ -52,19 +53,31 @@ const Home = () => {
   ]);
 
   return (
-    <View style={{flex: 1, backgroundColor: 'white'}}>
-      <TitleText style={{textAlign: 'center', marginVertical: RFPercentage(1)}}>
-        Demo Project
-      </TitleText>
-      <TabView
-        navigationState={{index, routes}}
-        renderScene={renderScene}
-        onIndexChange={setIndex}
-        initialLayout={{width: layout.width}}
-        renderTabBar={renderTabBar}
+    <>
+      <MyStatusBar
+        backgroundColor={colors.primeColor}
+        barStyle="light-content"
+        translucent={false}
       />
-      <FullscreenImageModal />
-    </View>
+      <View style={{flex: 1, backgroundColor: colors.primeColor}}>
+        <TitleText
+          style={{
+            textAlign: 'center',
+            marginVertical: RFPercentage(1),
+            color: colors.white,
+          }}>
+          Demo Project
+        </TitleText>
+        <TabView
+          navigationState={{index, routes}}
+          renderScene={renderScene}
+          onIndexChange={setIndex}
+          initialLayout={{width: layout.width}}
+          renderTabBar={renderTabBar}
+        />
+        <FullscreenImageModal />
+      </View>
+    </>
   );
 };
 

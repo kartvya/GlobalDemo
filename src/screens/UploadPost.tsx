@@ -5,7 +5,6 @@ import {
   Dimensions,
   ImageBackground,
   Keyboard,
-  KeyboardAvoidingView,
   Pressable,
   ScrollView,
   StyleSheet,
@@ -13,16 +12,16 @@ import {
   View,
 } from 'react-native';
 import {MentionInput} from 'react-native-controlled-mentions';
+import {launchImageLibrary} from 'react-native-image-picker';
 import Carousel from 'react-native-reanimated-carousel';
 import {RFPercentage, RFValue} from 'react-native-responsive-fontsize';
+import {useDispatch} from 'react-redux';
 import {RootStackParamList} from '../../types';
 import {MXicon} from '../components/Icons';
 import {NormalText, TitleText} from '../components/Text';
-import {colors} from '../utility';
-import {useDispatch} from 'react-redux';
 import {AppDispatch, useAppSelector} from '../redux/appStore';
 import {Person, Post, addPost} from '../redux/slices/userSlice';
-import {launchImageLibrary} from 'react-native-image-picker';
+import {colors} from '../utility';
 //@ts-ignore
 import Video from 'react-native-video';
 
@@ -74,25 +73,6 @@ const UploadPost = () => {
       keyboardDidShowListener.remove();
     };
   }, []);
-
-  // const onPressGallery = () => {
-  //   ImagePicker.openPicker({
-  //     width: 1000,
-  //     height: 800,
-  //     cropping: true,
-  //     includeBase64: false,
-  //     compressImageQuality: 1,
-  //     mediaType: 'any',
-  //   })
-  //   .then(images => {
-  //     if (images) {
-  //       setSelectedImages(prevImages => [...prevImages, images]);
-  //     }
-  //   })
-  //   .catch(error => {
-  //     console.log(error, 'image upload calncled');
-  //   });
-  // };
 
   const onPressGallery = () => {
     launchImageLibrary({mediaType: 'mixed'}, response => {
@@ -188,11 +168,12 @@ const UploadPost = () => {
             <MXicon
               type="AntDesign"
               name="close"
-              color={colors.black}
+              color={colors.white}
               size={RFPercentage(3)}
             />
           </Pressable>
-          <TitleText style={{marginHorizontal: RFPercentage(1)}}>
+          <TitleText
+            style={{marginHorizontal: RFPercentage(1), color: colors.white}}>
             New post
           </TitleText>
         </View>
@@ -200,7 +181,7 @@ const UploadPost = () => {
           <MXicon
             type="AntDesign"
             name={'check'}
-            color={colors.black}
+            color={colors.white}
             size={RFPercentage(3)}
           />
         </Pressable>
@@ -340,18 +321,20 @@ const UploadPost = () => {
           />
         </View>
       ) : (
-        <Pressable style={styles.noPhotoContainer} onPress={onPressGallery}>
-          <MXicon
-            type="AntDesign"
-            name="pluscircleo"
-            size={RFPercentage(7)}
-            color={colors.textGray}
-          />
+        <View style={styles.noPhotoContainer}>
+          <Pressable onPress={onPressGallery}>
+            <MXicon
+              type="AntDesign"
+              name="pluscircleo"
+              size={RFPercentage(7)}
+              color={colors.textGray}
+            />
+          </Pressable>
           <TitleText
             style={{marginVertical: RFPercentage(1), color: colors.textGray}}>
             Share you memory
           </TitleText>
-        </Pressable>
+        </View>
       )}
       {selectedImages.length > 0 &&
         selectedImages.length < 4 &&
@@ -387,8 +370,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingHorizontal: RFPercentage(1),
     paddingVertical: RFPercentage(2),
-    borderBottomWidth: StyleSheet.hairlineWidth,
     justifyContent: 'space-between',
+    backgroundColor: colors.primeColor,
   },
   textInputContainer: {
     padding: RFPercentage(1.5),
@@ -413,30 +396,9 @@ const styles = StyleSheet.create({
   carouselContainer: {
     flex: 1,
   },
-  carouselItem: {
-    width: windowWidth,
-    height: RFPercentage(30),
-    borderRadius: 10,
-    overflow: 'hidden',
-  },
   bannerImageStyle: {
     flex: 1,
     height: RFPercentage(40),
-    padding: RFPercentage(1),
-  },
-  imageOverlay: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    width: '100%',
-    backgroundColor: 'rgba(0,0,0,0.5)',
-    padding: RFPercentage(1),
-  },
-  imageText: {
-    color: colors.white,
-    fontSize: RFPercentage(2),
-  },
-  deleteButton: {
     padding: RFPercentage(1),
   },
   countText: {

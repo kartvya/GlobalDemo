@@ -5,6 +5,8 @@ import {Provider} from 'react-redux';
 import {PersistGate} from 'redux-persist/integration/react';
 import {appStore, persistor} from './redux/appStore';
 import Navigator from './navigation/Navigator';
+import MyStatusBar from './components/CustomeStatusBar';
+import {colors} from './utility';
 
 const App = () => {
   return (

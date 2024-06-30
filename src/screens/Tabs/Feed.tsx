@@ -8,8 +8,9 @@ import {
   StyleSheet,
   ToastAndroid,
   View,
-  Animated as RNAnimated,
 } from 'react-native';
+import {replaceMentionValues} from 'react-native-controlled-mentions';
+import ParsedText from 'react-native-parsed-text';
 import Animated, {
   runOnJS,
   useAnimatedStyle,
@@ -22,14 +23,12 @@ import {RFPercentage, RFValue} from 'react-native-responsive-fontsize';
 import {useDispatch} from 'react-redux';
 import DoubleTouchableOpacity from '../../components/DoubleTouchableOpacity';
 import {MXicon} from '../../components/Icons';
+import Paginator from '../../components/Paginator';
 import {NormalText, TitleText} from '../../components/Text';
 import Wrapper from '../../components/Wrapper';
 import {AppDispatch, useAppSelector} from '../../redux/appStore';
 import {Post, toggleImageModal, toggleLike} from '../../redux/slices/userSlice';
 import {colors} from '../../utility';
-import ParsedText from 'react-native-parsed-text';
-import {replaceMentionValues} from 'react-native-controlled-mentions';
-import Paginator from '../../components/Paginator';
 //@ts-ignore
 import Video from 'react-native-video';
 
@@ -77,10 +76,18 @@ const MemoizedRenderItem: React.FC<RenderItemProps> = React.memo(
     };
 
     const handleNamePress = (name: string, matchIndex: number) => {
-      ToastAndroid.show(
-        `${name} has been tagged to this post!`,
-        ToastAndroid.SHORT,
-      );
+      const input = '@ ';
+      const match = name.match(/@\[(.*?)\]/);
+
+      if (match && match.length > 1) {
+        const extractedText = match[1];
+        ToastAndroid.show(
+          `${extractedText} has been tagged to this post!`,
+          ToastAndroid.SHORT,
+        );
+      } else {
+        console.log('No match found or invalid input format.');
+      }
     };
 
     return (
@@ -270,7 +277,7 @@ const Feed: React.FC = () => {
     [visibleIndex],
   );
 
-  const viewabilityConfig = {itemVisiblePercentThreshold: 100};
+  const viewabilityConfig = {itemVisiblePercentThreshold: 30};
 
   const viewabilityConfigCallbackPairs = useRef([
     {viewabilityConfig, onViewableItemsChanged},

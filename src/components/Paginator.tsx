@@ -29,11 +29,7 @@ const Paginator: FunctionComponent<PaginatorProps> = ({data, scrollX}) => {
               smallDotSize,
               smallDotSize,
             ]);
-            const opacity = interpolate(
-              scrollX.value,
-              inputRange,
-              [0.7, 1, 0.7],
-            );
+            const opacity = interpolate(scrollX.value, inputRange, [1, 1, 1]);
             const backgroundColor = interpolateColor(
               scrollX.value,
               inputRange,
