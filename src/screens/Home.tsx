@@ -8,6 +8,7 @@ import {NormalText, TitleText} from '../components/Text';
 import {colors} from '../utility';
 import Feed from './Tabs/Feed';
 import Userlist from './Tabs/Userlist';
+import MyStatusBar from '../components/MyStatusBar';
 
 const renderScene = SceneMap({
   first: Feed,
@@ -53,6 +54,7 @@ const Home = () => {
 
   return (
     <View style={{flex: 1, backgroundColor: colors.white}}>
+      <MyStatusBar backgroundColor={colors.white} barStyle={'light-content'} />
       <TitleText
         style={{
           textAlign: 'center',

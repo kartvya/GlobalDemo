@@ -51,7 +51,7 @@ const styles = StyleSheet.create({
     borderColor: colors.borderGray,
     fontSize: RFValue(12),
     borderWidth: 1,
-    padding: 7,
+    padding: 10,
     marginTop: 5,
     paddingLeft: RFPercentage(5.5),
     fontFamily: 'ComicNeue-Regular',

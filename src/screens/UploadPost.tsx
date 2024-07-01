@@ -24,6 +24,7 @@ import {Person, Post, addPost} from '../redux/slices/userSlice';
 import {colors} from '../utility';
 //@ts-ignore
 import Video from 'react-native-video';
+import MyStatusBar from '../components/MyStatusBar';
 
 const windowWidth = Dimensions.get('window').width;
 
@@ -189,6 +190,10 @@ const UploadPost = () => {
 
   return (
     <View style={styles.container}>
+      <MyStatusBar
+        backgroundColor={colors.primeColor}
+        barStyle={'light-content'}
+      />
       <View style={styles.headerContainer}>
         <View style={{flexDirection: 'row', alignItems: 'center'}}>
           <Pressable onPress={() => navigation.goBack()}>
