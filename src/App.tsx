@@ -1,12 +1,10 @@
-import {StyleSheet, Text, View} from 'react-native';
 import React from 'react';
+import {StyleSheet} from 'react-native';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
 import {Provider} from 'react-redux';
 import {PersistGate} from 'redux-persist/integration/react';
-import {appStore, persistor} from './redux/appStore';
 import Navigator from './navigation/Navigator';
-import MyStatusBar from './components/CustomeStatusBar';
-import {colors} from './utility';
+import {appStore, persistor} from './redux/appStore';
 
 const App = () => {
   return (
@@ -21,5 +19,3 @@ const App = () => {
 };
 
 export default App;
-
-const styles = StyleSheet.create({});

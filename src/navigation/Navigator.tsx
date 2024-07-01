@@ -1,7 +1,6 @@
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import React from 'react';
-import {StyleSheet} from 'react-native';
 import {RootStackParamList} from '../../types';
 import Home from '../screens/Home';
 import UploadPost from '../screens/UploadPost';
@@ -21,5 +20,3 @@ const Navigator = () => {
 };
 
 export default Navigator;
-
-const styles = StyleSheet.create({});

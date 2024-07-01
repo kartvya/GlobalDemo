@@ -1,14 +1,14 @@
 import React from 'react';
-import {StyleSheet, View, useWindowDimensions} from 'react-native';
+import {View, useWindowDimensions} from 'react-native';
 import {RFPercentage, RFValue} from 'react-native-responsive-fontsize';
 import {SceneMap, TabBar, TabView} from 'react-native-tab-view';
 import {RouteData} from '../../types';
 import FullscreenImageModal from '../components/FullscreenImageModal';
+import MyStatusBar from '../components/MyStatusBar';
 import {NormalText, TitleText} from '../components/Text';
 import {colors} from '../utility';
 import Feed from './Tabs/Feed';
 import Userlist from './Tabs/Userlist';
-import MyStatusBar from '../components/MyStatusBar';
 
 const renderScene = SceneMap({
   first: Feed,
@@ -76,5 +76,3 @@ const Home = () => {
 };
 
 export default Home;
-
-const styles = StyleSheet.create({});
