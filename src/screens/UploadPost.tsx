@@ -3,7 +3,6 @@ import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import React, {useEffect, useRef, useState} from 'react';
 import {
   Dimensions,
-  ImageBackground,
   Keyboard,
   Pressable,
   ScrollView,
@@ -13,7 +12,6 @@ import {
 } from 'react-native';
 import {MentionInput} from 'react-native-controlled-mentions';
 import {launchImageLibrary} from 'react-native-image-picker';
-import Carousel from 'react-native-reanimated-carousel';
 import {RFPercentage, RFValue} from 'react-native-responsive-fontsize';
 import {useDispatch} from 'react-redux';
 import {RootStackParamList} from '../../types';
@@ -22,9 +20,8 @@ import {NormalText, TitleText} from '../components/Text';
 import {AppDispatch, useAppSelector} from '../redux/appStore';
 import {Person, Post, addPost} from '../redux/slices/userSlice';
 import {colors} from '../utility';
-//@ts-ignore
-import Video from 'react-native-video';
-import MyStatusBar from '../components/MyStatusBar';
+import Header from './components/Header';
+import ImageCarousel from './components/ImageCarousel';
 
 const windowWidth = Dimensions.get('window').width;
 
@@ -190,34 +187,7 @@ const UploadPost = () => {
 
   return (
     <View style={styles.container}>
-      <MyStatusBar
-        backgroundColor={colors.primeColor}
-        barStyle={'light-content'}
-      />
-      <View style={styles.headerContainer}>
-        <View style={{flexDirection: 'row', alignItems: 'center'}}>
-          <Pressable onPress={() => navigation.goBack()}>
-            <MXicon
-              type="AntDesign"
-              name="close"
-              color={colors.black}
-              size={RFPercentage(3)}
-            />
-          </Pressable>
-          <TitleText
-            style={{marginHorizontal: RFPercentage(2), color: colors.black}}>
-            New post
-          </TitleText>
-        </View>
-        <Pressable onPress={uploadImage}>
-          <MXicon
-            type="AntDesign"
-            name={'check'}
-            color={colors.black}
-            size={RFPercentage(3)}
-          />
-        </Pressable>
-      </View>
+      <Header uploadImage={uploadImage} />
       <View style={styles.textInputContainer}>
         <MentionInput
           scrollEnabled
@@ -245,113 +215,12 @@ const UploadPost = () => {
         </NormalText>
       </View>
       {selectedImages.length > 0 ? (
-        <View style={styles.carouselContainer}>
-          <Carousel
-            width={windowWidth}
-            height={RFPercentage(40)}
-            autoPlay={false}
-            loop={false}
-            data={selectedImages ?? []}
-            scrollAnimationDuration={1000}
-            onSnapToItem={index => setActiveIndex(index)}
-            mode="parallax"
-            modeConfig={{
-              parallaxScrollingScale: 0.9,
-              parallaxScrollingOffset: 50,
-            }}
-            renderItem={({item, index}) => {
-              if (item?.type === 'video/mp4') {
-                return (
-                  <View style={{flex: 1}}>
-                    <View
-                      style={[
-                        styles.imageCountConatiner,
-                        {position: 'absolute', zIndex: 999, right: 10, top: 10},
-                      ]}>
-                      {selectedImages.length > 1 && (
-                        <View style={styles.imageIcons}>
-                          <NormalText style={styles.countText}>{`${index + 1}/${
-                            selectedImages.length
-                          }`}</NormalText>
-                        </View>
-                      )}
-                      <Pressable
-                        onPress={() => deleteImage(index)}
-                        style={[
-                          styles.imageIcons,
-                          {marginLeft: RFPercentage(1)},
-                        ]}>
-                        <MXicon
-                          type="AntDesign"
-                          name={'close'}
-                          color={colors.white}
-                          size={RFPercentage(3)}
-                        />
-                      </Pressable>
-                    </View>
-                    <Video
-                      source={{uri: item?.uri}}
-                      ref={videoRef}
-                      onBuffer={() => console.log('buffring')}
-                      onError={() => console.log('error')}
-                      style={[styles.bannerImageStyle]}
-                      resizeMode="cover"
-                      repeat={true}
-                      useTextureView={false}
-                      onPlaybackError={(error: any) =>
-                        console.error('Video error:', error)
-                      }
-                      maxBitRate={700000}
-                      ignoreSilentSwitch="ignore"
-                      paused={
-                        activeIndex == 0
-                          ? false
-                          : activeIndex == index
-                          ? false
-                          : true
-                      }
-                      automaticallyWaitsToMinimizeStalling={false}
-                      hideShutterView={true}
-                      disableFocus={true}
-                    />
-                  </View>
-                );
-              } else {
-                return (
-                  <View style={{flex: 1}}>
-                    <ImageBackground
-                      source={{uri: item.uri}}
-                      style={styles.bannerImageStyle}
-                      resizeMode="cover">
-                      <View style={styles.imageCountConatiner}>
-                        {selectedImages.length > 1 && (
-                          <View style={styles.imageIcons}>
-                            <NormalText style={styles.countText}>{`${
-                              index + 1
-                            }/${selectedImages.length}`}</NormalText>
-                          </View>
-                        )}
-                        <Pressable
-                          onPress={() => deleteImage(index)}
-                          style={[
-                            styles.imageIcons,
-                            {marginLeft: RFPercentage(1)},
-                          ]}>
-                          <MXicon
-                            type="AntDesign"
-                            name={'close'}
-                            color={colors.white}
-                            size={RFPercentage(3)}
-                          />
-                        </Pressable>
-                      </View>
-                    </ImageBackground>
-                  </View>
-                );
-              }
-            }}
-          />
-        </View>
+        <ImageCarousel
+          activeIndex={activeIndex}
+          setActiveIndex={index => setActiveIndex(index)}
+          deleteImage={index => deleteImage(index)}
+          selectedImages={selectedImages ?? []}
+        />
       ) : (
         <View style={styles.noPhotoContainer}>
           <Pressable onPress={onPressGallery}>
@@ -372,7 +241,7 @@ const UploadPost = () => {
         selectedImages.length < 4 &&
         !isKeyboardVisible && (
           <Pressable
-            style={styles.moreImagePickConatiner}
+            style={styles.moreImagePickContainer}
             onPress={onPressGallery}>
             <TitleText
               style={{color: colors.white, marginHorizontal: RFPercentage(1)}}>
@@ -397,15 +266,6 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: colors.white,
   },
-  headerContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingHorizontal: RFPercentage(2),
-    paddingVertical: RFPercentage(2),
-    justifyContent: 'space-between',
-    backgroundColor: colors.white,
-    borderBottomWidth: StyleSheet.hairlineWidth,
-  },
   textInputContainer: {
     padding: RFPercentage(1.5),
     backgroundColor: colors.white,
@@ -426,31 +286,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  carouselContainer: {
-    flex: 1,
-  },
-  bannerImageStyle: {
-    flex: 1,
-    height: RFPercentage(40),
-    padding: RFPercentage(1),
-  },
-  countText: {
-    color: colors.white,
-  },
-  imageIcons: {
-    width: RFPercentage(5),
-    height: RFPercentage(5),
-    backgroundColor: colors.transAlpha2,
-    borderRadius: 90,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  imageCountConatiner: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'flex-end',
-  },
-  moreImagePickConatiner: {
+  moreImagePickContainer: {
     backgroundColor: colors.primeColor,
     margin: RFPercentage(2),
     borderRadius: 10,

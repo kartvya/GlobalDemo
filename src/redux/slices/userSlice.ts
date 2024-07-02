@@ -1,4 +1,4 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 
 export interface Person {
   id: number;
@@ -15,37 +15,125 @@ export interface Post {
   commentCount: number;
   username: string;
   userProfileImage: string;
-  isLiked:boolean;
-  description:string;
+  isLiked: boolean;
+  description: string;
 }
-
-
 
 interface UserState {
   people: Person[];
   posts: Post[];
-  followedUser: Person[],
-  showImageModal:boolean,
-  selectedImages:string[]
+  followedUser: Person[];
+  showImageModal: boolean;
+  selectedImages: string[];
 }
 
 const initialState: UserState = {
   people: [
-    { id: 1, name: 'Emma Watson', subname: 'Software Developer', followed: false, profileImage: 'https://picsum.photos/id/1005/100' },
-    { id: 2, name: 'Liam Johnson', subname: 'UI/UX Designer', followed: false, profileImage: 'https://picsum.photos/id/1006/100' },
-    { id: 3, name: 'Olivia Brown', subname: 'Project Manager', followed: false, profileImage: 'https://picsum.photos/id/1008/100' },
-    { id: 4, name: 'Noah Smith', subname: 'Data Analyst', followed: false, profileImage: 'https://picsum.photos/id/1011/100' },
-    { id: 5, name: 'Ava Davis', subname: 'Marketing Specialist', followed: false, profileImage: 'https://picsum.photos/id/1012/100' },
-    { id: 6, name: 'Elijah Wilson', subname: 'Frontend Developer', followed: false, profileImage: 'https://picsum.photos/id/1015/100' },
-    { id: 7, name: 'Sophia Martinez', subname: 'Backend Developer', followed: false, profileImage: 'https://picsum.photos/id/1016/100' },
-    { id: 8, name: 'James Anderson', subname: 'System Architect', followed: false, profileImage: 'https://picsum.photos/id/1018/100' },
-    { id: 9, name: 'Isabella Garcia', subname: 'DevOps Engineer', followed: false, profileImage: 'https://picsum.photos/id/1020/100' },
-    { id: 10, name: 'William Taylor', subname: 'Database Administrator', followed: false, profileImage: 'https://picsum.photos/id/1021/100' },
-    { id: 11, name: 'Mia Moore', subname: 'QA Engineer', followed: false, profileImage: 'https://picsum.photos/id/1024/100' },
-    { id: 12, name: 'Benjamin Lee', subname: 'Network Engineer', followed: false, profileImage: 'https://picsum.photos/id/1025/100' },
-    { id: 13, name: 'Charlotte White', subname: 'Security Analyst', followed: false, profileImage: 'https://picsum.photos/id/1027/100' },
-    { id: 14, name: 'Henry Harris', subname: 'Mobile Developer', followed: false, profileImage: 'https://picsum.photos/id/1028/100' },
-    { id: 15, name: 'Amelia Martin', subname: 'AI Specialist', followed: false, profileImage: 'https://picsum.photos/id/1031/100' },
+    {
+      id: 1,
+      name: 'Emma Watson',
+      subname: 'Software Developer',
+      followed: false,
+      profileImage: 'https://picsum.photos/id/1005/100',
+    },
+    {
+      id: 2,
+      name: 'Liam Johnson',
+      subname: 'UI/UX Designer',
+      followed: false,
+      profileImage: 'https://picsum.photos/id/1006/100',
+    },
+    {
+      id: 3,
+      name: 'Olivia Brown',
+      subname: 'Project Manager',
+      followed: false,
+      profileImage: 'https://picsum.photos/id/1008/100',
+    },
+    {
+      id: 4,
+      name: 'Noah Smith',
+      subname: 'Data Analyst',
+      followed: false,
+      profileImage: 'https://picsum.photos/id/1011/100',
+    },
+    {
+      id: 5,
+      name: 'Ava Davis',
+      subname: 'Marketing Specialist',
+      followed: false,
+      profileImage: 'https://picsum.photos/id/1012/100',
+    },
+    {
+      id: 6,
+      name: 'Elijah Wilson',
+      subname: 'Frontend Developer',
+      followed: false,
+      profileImage: 'https://picsum.photos/id/1015/100',
+    },
+    {
+      id: 7,
+      name: 'Sophia Martinez',
+      subname: 'Backend Developer',
+      followed: false,
+      profileImage: 'https://picsum.photos/id/1016/100',
+    },
+    {
+      id: 8,
+      name: 'James Anderson',
+      subname: 'System Architect',
+      followed: false,
+      profileImage: 'https://picsum.photos/id/1018/100',
+    },
+    {
+      id: 9,
+      name: 'Isabella Garcia',
+      subname: 'DevOps Engineer',
+      followed: false,
+      profileImage: 'https://picsum.photos/id/1020/100',
+    },
+    {
+      id: 10,
+      name: 'William Taylor',
+      subname: 'Database Administrator',
+      followed: false,
+      profileImage: 'https://picsum.photos/id/1021/100',
+    },
+    {
+      id: 11,
+      name: 'Mia Moore',
+      subname: 'QA Engineer',
+      followed: false,
+      profileImage: 'https://picsum.photos/id/1024/100',
+    },
+    {
+      id: 12,
+      name: 'Benjamin Lee',
+      subname: 'Network Engineer',
+      followed: false,
+      profileImage: 'https://picsum.photos/id/1025/100',
+    },
+    {
+      id: 13,
+      name: 'Charlotte White',
+      subname: 'Security Analyst',
+      followed: false,
+      profileImage: 'https://picsum.photos/id/1027/100',
+    },
+    {
+      id: 14,
+      name: 'Henry Harris',
+      subname: 'Mobile Developer',
+      followed: false,
+      profileImage: 'https://picsum.photos/id/1028/100',
+    },
+    {
+      id: 15,
+      name: 'Amelia Martin',
+      subname: 'AI Specialist',
+      followed: false,
+      profileImage: 'https://picsum.photos/id/1031/100',
+    },
   ],
   posts: [
     {
@@ -59,7 +147,8 @@ const initialState: UserState = {
       username: 'Emma Watson',
       userProfileImage: 'https://picsum.photos/id/1005/100',
       isLiked: false,
-      description: "Beautiful sunset view from the hilltop. Nature at its best!",
+      description:
+        'Beautiful sunset view from the hilltop. Nature at its best!',
     },
     {
       id: 2,
@@ -72,7 +161,7 @@ const initialState: UserState = {
       username: 'Liam Johnson',
       userProfileImage: 'https://picsum.photos/id/1006/100',
       isLiked: false,
-      description: "",
+      description: '',
     },
     {
       id: 3,
@@ -85,7 +174,8 @@ const initialState: UserState = {
       username: 'Olivia Brown',
       userProfileImage: 'https://picsum.photos/id/1008/100',
       isLiked: false,
-      description: "Beautiful sunset view from the hilltop. Nature at its best!",
+      description:
+        'Beautiful sunset view from the hilltop. Nature at its best!',
     },
     {
       id: 4,
@@ -98,7 +188,7 @@ const initialState: UserState = {
       username: 'Noah Smith',
       userProfileImage: 'https://picsum.photos/id/1011/100',
       isLiked: false,
-      description: "",
+      description: '',
     },
     {
       id: 5,
@@ -111,7 +201,8 @@ const initialState: UserState = {
       username: 'Ava Davis',
       userProfileImage: 'https://picsum.photos/id/1012/100',
       isLiked: false,
-      description: "Beautiful sunset view from the hilltop. Nature at its best!",
+      description:
+        'Beautiful sunset view from the hilltop. Nature at its best!',
     },
     {
       id: 6,
@@ -124,7 +215,7 @@ const initialState: UserState = {
       username: 'Elijah Wilson',
       userProfileImage: 'https://picsum.photos/id/1015/100',
       isLiked: false,
-      description: "",
+      description: '',
     },
     {
       id: 7,
@@ -137,7 +228,7 @@ const initialState: UserState = {
       username: 'Sophia Martinez',
       userProfileImage: 'https://picsum.photos/id/1016/100',
       isLiked: false,
-      description: "",
+      description: '',
     },
     {
       id: 8,
@@ -150,7 +241,8 @@ const initialState: UserState = {
       username: 'James Anderson',
       userProfileImage: 'https://picsum.photos/id/1018/100',
       isLiked: false,
-      description: "Beautiful sunset view from the hilltop. Nature at its best!",
+      description:
+        'Beautiful sunset view from the hilltop. Nature at its best!',
     },
     {
       id: 9,
@@ -163,7 +255,7 @@ const initialState: UserState = {
       username: 'Isabella Garcia',
       userProfileImage: 'https://picsum.photos/id/1020/100',
       isLiked: false,
-      description: "",
+      description: '',
     },
     {
       id: 10,
@@ -176,12 +268,13 @@ const initialState: UserState = {
       username: 'William Taylor',
       userProfileImage: 'https://picsum.photos/id/1021/100',
       isLiked: false,
-      description: "Beautiful sunset view from the hilltop. Nature at its best!",
+      description:
+        'Beautiful sunset view from the hilltop. Nature at its best!',
     },
   ],
-  followedUser:[],
-  showImageModal:false,
-  selectedImages:[]
+  followedUser: [],
+  showImageModal: false,
+  selectedImages: [],
 };
 
 const userSlice = createSlice({
@@ -195,7 +288,9 @@ const userSlice = createSlice({
         if (person.followed) {
           state.followedUser.push(person);
         } else {
-          state.followedUser = state.followedUser.filter((item:Person)=> item.id !== person.id);
+          state.followedUser = state.followedUser.filter(
+            (item: Person) => item.id !== person.id,
+          );
         }
       }
     },
@@ -209,13 +304,16 @@ const userSlice = createSlice({
         post.likeCount += post.isLiked ? 1 : -1;
       }
     },
-    toggleImageModal(state, action: PayloadAction<{ images: string[]; open: boolean }>) {
+    toggleImageModal(
+      state,
+      action: PayloadAction<{images: string[]; open: boolean}>,
+    ) {
       state.selectedImages = action.payload.open ? action.payload.images : [];
       state.showImageModal = action.payload.open;
     },
   },
 });
 
-
-export const { toggleFollow, addPost, toggleLike,toggleImageModal } = userSlice.actions;
+export const {toggleFollow, addPost, toggleLike, toggleImageModal} =
+  userSlice.actions;
 export default userSlice;

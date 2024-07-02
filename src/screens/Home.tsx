@@ -10,6 +10,11 @@ import {colors} from '../utility';
 import Feed from './Tabs/Feed';
 import Userlist from './Tabs/Userlist';
 
+interface Routes {
+  key: string;
+  title: string;
+}
+
 const renderScene = SceneMap({
   first: Feed,
   second: Userlist,
@@ -46,8 +51,8 @@ const renderTabBar = (props: any) => (
 
 const Home = () => {
   const layout = useWindowDimensions();
-  const [index, setIndex] = React.useState(0);
-  const [routes] = React.useState([
+  const [index, setIndex] = React.useState<number>(0);
+  const [routes] = React.useState<Routes[]>([
     {key: 'first', title: 'Posts'},
     {key: 'second', title: 'People'},
   ]);
