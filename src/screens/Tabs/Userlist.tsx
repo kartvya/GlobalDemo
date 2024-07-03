@@ -1,12 +1,13 @@
-import {FlatList, Image, Pressable, StyleSheet, Text, View} from 'react-native';
-import React, {useEffect, useState, useCallback} from 'react';
+import {FlashList} from '@shopify/flash-list';
+import React, {useCallback, useEffect, useState} from 'react';
+import {Image, Pressable, StyleSheet, View} from 'react-native';
 import {RFPercentage} from 'react-native-responsive-fontsize';
-import {NormalText, TitleText} from '../../components/Text';
-import CommonSearchbar from '../../components/CommonSearchbar';
 import {createFilter} from 'react-native-search-filter';
+import {useDispatch} from 'react-redux';
+import CommonSearchbar from '../../components/CommonSearchbar';
+import {NormalText, TitleText} from '../../components/Text';
 import {AppDispatch, useAppSelector} from '../../redux/appStore';
 import {Person, toggleFollow} from '../../redux/slices/userSlice';
-import {useDispatch} from 'react-redux';
 import {colors} from '../../utility';
 
 interface RenderItemProps {
@@ -76,15 +77,16 @@ const Userlist = () => {
         />
       </View>
       {filteredUsers.length > 0 ? (
-        <FlatList
+        <FlashList
           data={filteredUsers}
           renderItem={renderItem}
-          showsVerticalScrollIndicator={false}
+          estimatedItemSize={200}
+          keyExtractor={(item: Person) => item.id.toString()}
           ItemSeparatorComponent={() => (
             <View style={{marginVertical: RFPercentage(1)}} />
           )}
           contentContainerStyle={{paddingBottom: RFPercentage(2)}}
-          keyExtractor={(item: Person) => item.id.toString()}
+          showsVerticalScrollIndicator={false}
         />
       ) : (
         <View style={styles.noUsersContainer}>

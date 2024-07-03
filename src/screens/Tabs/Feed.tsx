@@ -1,15 +1,16 @@
 import React, {useCallback, useEffect, useRef, useState} from 'react';
-import {FlatList, ListRenderItemInfo, StyleSheet, View} from 'react-native';
+import {StyleSheet, View} from 'react-native';
 import {RFPercentage, RFValue} from 'react-native-responsive-fontsize';
 import Wrapper from '../../components/Wrapper';
 import {useAppSelector} from '../../redux/appStore';
 import {Post} from '../../redux/slices/userSlice';
 import {colors} from '../../utility';
 import PostListItem from '../components/PostListItem';
+import {FlashList, ListRenderItemInfo} from '@shopify/flash-list';
 
 const Feed = () => {
   const userPost = useAppSelector(state => state.home.posts) as Post[];
-  const flatlistRef = useRef<FlatList<Post>>(null);
+  const flatlistRef = useRef<FlashList<Post>>(null);
   const [visibleIndex, setVisibleIndex] = useState<number | null>(null);
 
   useEffect(() => {
@@ -45,10 +46,10 @@ const Feed = () => {
   return (
     <View style={styles.container}>
       <Wrapper>
-        <FlatList
+        <FlashList
+          data={userPost}
           ref={flatlistRef}
           renderItem={renderItem}
-          data={userPost}
           keyExtractor={item => item.id.toString()}
           ItemSeparatorComponent={() => (
             <View style={{marginVertical: RFPercentage(1)}} />

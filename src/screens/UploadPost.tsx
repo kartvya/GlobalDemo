@@ -1,6 +1,6 @@
 import {useNavigation} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import {
   Dimensions,
   Keyboard,
@@ -69,7 +69,7 @@ const UploadPost = () => {
     };
   }, []);
 
-  const onPressGallery = () => {
+  const onPressGallery = useCallback(() => {
     launchImageLibrary({mediaType: 'mixed'}, response => {
       if (response.didCancel) {
         console.log('User cancelled image picker');
@@ -88,25 +88,27 @@ const UploadPost = () => {
         setSelectedImages(prevImages => [...prevImages, ...newImages]);
       }
     });
-  };
+  }, []);
 
-  const deleteImage = (index: number) => {
-    const updatedImages = [...selectedImages];
-    updatedImages.splice(index, 1);
-    setSelectedImages(updatedImages);
-  };
+  const deleteImage = useCallback((index: number) => {
+    setSelectedImages(prevImages => {
+      const updatedImages = [...prevImages];
+      updatedImages.splice(index, 1);
+      return updatedImages;
+    });
+  }, []);
 
-  const uploadImage = () => {
+  const uploadImage = useCallback(() => {
     try {
-      let onlyImages = selectedImages.map((item: any) => item.uri);
+      const onlyImages = selectedImages.map(item => item.uri);
       if (onlyImages.length > 0 || value.length > 0) {
         const newPost: Post = {
           uploadedImages: onlyImages,
           likeCount: 0,
           commentCount: 0,
-          username: 'Openxcell',
+          username: 'Kartvya Acharya',
           userProfileImage:
-            'https://media.licdn.com/dms/image/C4D0BAQHdV0Za6fJ6rQ/company-logo_200_200/0/1633950210028/openxcell_logo?e=2147483647&v=beta&t=MNfzk-Rn8tLLhr2CyUGr7ulFL1XADGIplebT4K7BFpk',
+            'https://1.gravatar.com/avatar/05fa96e7d35eaf1d4d22953bfa7f414fcf981d7bf753c009ed8e0846fb661732?size=256',
           isLiked: false,
           id: Math.random(),
           description: value?.trim(),
@@ -119,71 +121,77 @@ const UploadPost = () => {
     } catch (error) {
       console.log(error);
     }
-  };
+  }, [selectedImages, value, dispatch, navigation]);
 
-  const renderSuggestions = (props: {keyword: any; onSuggestionPress: any}) => {
-    const {keyword, onSuggestionPress} = props;
+  const renderSuggestions = useCallback(
+    (props: {keyword: any; onSuggestionPress: any}) => {
+      const {keyword, onSuggestionPress} = props;
 
-    if (keyword == null) {
-      return null;
-    }
+      if (keyword == null) {
+        return null;
+      }
 
-    const filteredUsers = followedUser.filter(
-      one =>
-        one.name.toLowerCase().includes(keyword.toLowerCase()) &&
-        !usedTags.some(tag => tag.id === one.id),
-    );
+      const filteredUsers = followedUser.filter(
+        one =>
+          one.name.toLowerCase().includes(keyword.toLowerCase()) &&
+          !usedTags.some(tag => tag.id === one.id),
+      );
 
-    if (filteredUsers.length === 0) {
+      if (filteredUsers.length === 0) {
+        return (
+          <View style={styles.suggestionsContainer}>
+            <NormalText style={{margin: RFPercentage(1)}}>
+              No followers.
+            </NormalText>
+          </View>
+        );
+      }
+
       return (
-        <View style={styles.suggestionsContainer}>
-          <NormalText style={{margin: RFPercentage(1)}}>
-            No followers.
-          </NormalText>
-        </View>
+        <ScrollView
+          keyboardShouldPersistTaps="always"
+          style={styles.suggestionsContainer}>
+          {filteredUsers.map(one => {
+            const firstName = one.name.split(' ')[0];
+            return (
+              <Pressable
+                key={one.id}
+                onPress={() => {
+                  onSuggestionPress({id: one.id, name: firstName});
+                  setUsedTags(prevTags => [...prevTags, one]);
+                }}
+                style={styles.suggestionItem}>
+                <NormalText>{firstName}</NormalText>
+              </Pressable>
+            );
+          })}
+        </ScrollView>
       );
-    }
+    },
+    [followedUser, usedTags],
+  );
 
-    return (
-      <ScrollView
-        keyboardShouldPersistTaps="always"
-        style={styles.suggestionsContainer}>
-        {filteredUsers.map(one => {
-          const firstName = one.name.split(' ')[0];
-          return (
-            <Pressable
-              key={one.id}
-              onPress={() => {
-                onSuggestionPress({id: one.id, name: firstName});
-                setUsedTags(prevTags => [...prevTags, one]);
-              }}
-              style={styles.suggestionItem}>
-              <NormalText>{firstName}</NormalText>
-            </Pressable>
-          );
-        })}
-      </ScrollView>
-    );
-  };
-
-  const handleTagRemoval = (text: string) => {
-    const mentionRegex = /@(\w+)/g;
-    const mentionMatches = [...text.matchAll(mentionRegex)].map(
-      match => match[1],
-    );
-    const removedTags = usedTags.filter(
-      tag => !mentionMatches.includes(tag.name),
-    );
-    if (removedTags.length > 0) {
-      setUsedTags(prevTags =>
-        prevTags.filter(
-          tag => !removedTags.some(removed => removed.id === tag.id),
-        ),
+  const handleTagRemoval = useCallback(
+    (text: string) => {
+      const mentionRegex = /@(\w+)/g;
+      const mentionMatches = [...text.matchAll(mentionRegex)].map(
+        match => match[1],
       );
-    }
+      const removedTags = usedTags.filter(
+        tag => !mentionMatches.includes(tag.name),
+      );
+      if (removedTags.length > 0) {
+        setUsedTags(prevTags =>
+          prevTags.filter(
+            tag => !removedTags.some(removed => removed.id === tag.id),
+          ),
+        );
+      }
 
-    setValue(text);
-  };
+      setValue(text);
+    },
+    [usedTags],
+  );
 
   return (
     <View style={styles.container}>
@@ -233,7 +241,7 @@ const UploadPost = () => {
           </Pressable>
           <TitleText
             style={{marginVertical: RFPercentage(1), color: colors.textGray}}>
-            Share you memory
+            Share your memory
           </TitleText>
         </View>
       )}

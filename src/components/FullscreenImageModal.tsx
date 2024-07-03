@@ -104,7 +104,7 @@ const FullscreenImageModal: React.FC<FullscreenImageModalProps> = props => {
                   <Image
                     source={{uri: imageUrl}}
                     style={{width: '100%', height: '100%'}}
-                    resizeMode="cover"
+                    resizeMode="contain"
                   />
                 </View>
               );
