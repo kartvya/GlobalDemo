@@ -72,7 +72,7 @@ const PostListItem: React.FC<RenderItemProps> = ({item, isVisible}) => {
     dispatch(toggleImageModal({images: item.uploadedImages, open: true}));
   };
 
-  const handleNamePress = (name: string, matchIndex: number) => {
+  const handleNamePress = (name: string) => {
     const input = '@ ';
     const match = name.match(/@\[(.*?)\]/);
 
