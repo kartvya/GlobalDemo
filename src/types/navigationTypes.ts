@@ -1,16 +1,10 @@
+import { Product } from './types';
+
 export type RootStackParamList = {
-  AuthStack: {
-    screen: keyof AuthStackParamList;
-  };
-  BottomTab: {
-    screen: keyof BottomTabParamList;
-  };
-  HomeStack: {
-    screen: keyof HomeStackParamList;
-  };
-  ProfileStack: {
-    screen: keyof ProfileStackParamList;
-  };
+  HomeScreen: undefined;
+  CartScreen: undefined;
+  CreateProductScreen: { product?: Product };
+  ProductDetailsScreen: { product?: Product };
 };
 
 export type BottomTabParamList = {

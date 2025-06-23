@@ -1,51 +1,94 @@
 import React from 'react';
 import {
-  StyleSheet,
-  Text,
-  View,
+  Dimensions,
   FlatList,
   Image,
-  Dimensions,
+  Pressable,
+  StyleSheet,
+  Text,
   TouchableOpacity,
+  View,
 } from 'react-native';
-import { colors } from '../../assets/colors/colors';
-import ScreenWrapper from '../../components/ScreenWrapper';
-import { commonStyles } from '../../styles/commonStyle';
-import { wp } from '../../utils/helpers';
-import { useGetProductsQuery } from '../../services/apis/user/userApi';
-import { Icons } from '../../components/Icons';
 import { RFPercentage } from 'react-native-responsive-fontsize';
 import { useDispatch, useSelector } from 'react-redux';
+import { colors } from '../../assets/colors/colors';
+import { Icons } from '../../components/Icons';
+import ScreenWrapper from '../../components/ScreenWrapper';
+import { useGetProductsQuery } from '../../services/apis/user/userApi';
+import { commonStyles } from '../../styles/commonStyle';
+import { wp } from '../../utils/helpers';
+import { ACTIONCONSTANTS } from '../../services/config/apiConstants';
 import { RootState } from '../../redux/store';
-
-type Product = {
-  id: number;
-  title: string;
-  price: number;
-  image: string;
-  rating: {
-    rate: number;
-    count: number;
-  };
-};
+import { Product } from '../../types/types';
+import { NavigationProp, useNavigation } from '@react-navigation/native';
+import { RootStackParamList } from '../../types';
+import Spacer from '../../components/Spacer';
+import { Alert } from 'react-native';
 
 const { width } = Dimensions.get('window');
 const CARD_MARGIN = wp(2);
 const CARD_SIZE = (width - wp(10) - CARD_MARGIN * 3) / 2;
 
 const HomeScreen = () => {
-  const { data, isLoading, isFetching } = useGetProductsQuery();
+  const {
+    data: apiProducts = [],
+    isLoading,
+    isFetching,
+    error,
+  } = useGetProductsQuery();
+  const localProducts = useSelector(
+    (state: RootState) => state.root.productReducer.products,
+  );
+
+  const products = [...localProducts, ...(apiProducts || [])];
+
+  const navigation = useNavigation<NavigationProp<RootStackParamList>>();
+  const cart = useSelector((state: RootState) => state.root.cartReducer);
+
   const dispatch = useDispatch();
 
-  // Get cart count from redux
-  // const cartCount = useSelector((state: RootState) => state.cart.items.length);
-
   const handleAddToCart = (item: Product) => {
-    // dispatch(addToCart(item));
+    dispatch({ type: ACTIONCONSTANTS.ADD_TO_CART, payload: item });
+  };
+
+  const handleEditProduct = (item: Product) => {
+    navigation.navigate('CreateProductScreen', { product: item });
+  };
+
+  const handleDeleteProduct = (item: Product) => {
+    Alert.alert(
+      'Delete Product',
+      'Are you sure you want to delete this product?',
+      [
+        {
+          text: 'Cancel',
+          style: 'cancel',
+        },
+        {
+          text: 'Yes',
+          style: 'destructive',
+          onPress: () => {
+            dispatch({
+              type: ACTIONCONSTANTS.DELETE_PRODUCT,
+              payload: item.id,
+            });
+          },
+        },
+      ],
+      { cancelable: true },
+    );
   };
 
   const renderItem = ({ item }: { item: Product }) => (
-    <View style={styles.productCard}>
+    <Pressable
+      style={styles.productCard}
+      onPress={() =>
+        navigation.navigate({
+          name: 'ProductDetailsScreen',
+          params: { product: item },
+        })
+      }
+    >
       <Image source={{ uri: item.image }} style={styles.productImg} />
       <Text style={styles.productTitle} numberOfLines={2}>
         {item.title}
@@ -54,6 +97,34 @@ const HomeScreen = () => {
       <Text style={styles.productRating}>
         ⭐ {item.rating.rate} ({item.rating.count})
       </Text>
+      {item?.isLocal && (
+        <>
+          <TouchableOpacity
+            style={styles.editBtn}
+            onPress={() => handleEditProduct(item)}
+            activeOpacity={0.7}
+          >
+            <Icons
+              type="Feather"
+              name="edit-2"
+              size={RFPercentage(2.5)}
+              color="#fff"
+            />
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.dltBtn}
+            onPress={() => handleDeleteProduct(item)}
+            activeOpacity={0.7}
+          >
+            <Icons
+              type="Feather"
+              name="trash"
+              size={RFPercentage(2.5)}
+              color="#fff"
+            />
+          </TouchableOpacity>
+        </>
+      )}
       <TouchableOpacity
         style={styles.plusBtn}
         onPress={() => handleAddToCart(item)}
@@ -66,7 +137,7 @@ const HomeScreen = () => {
           color="#fff"
         />
       </TouchableOpacity>
-    </View>
+    </Pressable>
   );
 
   return (
@@ -77,11 +148,36 @@ const HomeScreen = () => {
       {/* Header */}
       <View style={styles.header}>
         <Text style={styles.headerTitle}>Products</Text>
-        <View style={styles.cartContainer}>
-          <Icons type="Feather" name="shopping-cart" size={RFPercentage(3)} />
-          <View style={styles.cartBadge}>
-            {/* <Text style={styles.cartBadgeText}>{cartCount}</Text> */}
-          </View>
+        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+          <Pressable
+            onPress={() =>
+              navigation.navigate({ name: 'CreateProductScreen', params: {} })
+            }
+          >
+            <Icons
+              type="Feather"
+              name="plus-circle"
+              size={RFPercentage(3)}
+              color={colors.black}
+            />
+          </Pressable>
+          <Spacer gap={10} />
+          <Pressable
+            style={styles.cartContainer}
+            onPress={() => navigation.navigate('CartScreen')}
+          >
+            <Icons
+              type="Feather"
+              name="shopping-cart"
+              size={RFPercentage(3)}
+              color={colors.black}
+            />
+            {cart?.items && (
+              <View style={styles.cartBadge}>
+                <Text style={styles.cartBadgeText}>{cart?.items?.length}</Text>
+              </View>
+            )}
+          </Pressable>
         </View>
       </View>
 
@@ -94,7 +190,7 @@ const HomeScreen = () => {
         </View>
       ) : (
         <FlatList
-          data={data?.products || data || []}
+          data={products}
           keyExtractor={item => item.id.toString()}
           renderItem={renderItem}
           numColumns={2}
@@ -118,7 +214,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     marginHorizontal: RFPercentage(2),
-    marginTop: RFPercentage(3),
+    marginTop: RFPercentage(2),
   },
   headerTitle: {
     fontSize: 28,
@@ -201,6 +297,28 @@ const styles = StyleSheet.create({
     top: wp(2),
     right: wp(2),
     backgroundColor: colors.primary,
+    borderRadius: 40,
+    padding: wp(1.8),
+    alignItems: 'center',
+    justifyContent: 'center',
+    elevation: 2,
+  },
+  editBtn: {
+    position: 'absolute',
+    top: wp(2),
+    right: wp(12),
+    backgroundColor: colors.primary,
+    borderRadius: 40,
+    padding: wp(1.8),
+    alignItems: 'center',
+    justifyContent: 'center',
+    elevation: 2,
+  },
+  dltBtn: {
+    position: 'absolute',
+    top: wp(12),
+    right: wp(2),
+    backgroundColor: colors.coralRed,
     borderRadius: 40,
     padding: wp(1.8),
     alignItems: 'center',
