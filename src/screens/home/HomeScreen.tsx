@@ -72,6 +72,10 @@ const HomeScreen = () => {
               type: ACTIONCONSTANTS.DELETE_PRODUCT,
               payload: item.id,
             });
+            dispatch({
+              type: ACTIONCONSTANTS.REMOVE_FROM_CART,
+              payload: item.id,
+            });
           },
         },
       ],
